@@ -45,7 +45,7 @@ KutLink is a simple, lightweight web application that lets users:
 ## Demo
 
 <p align="center">
-  <img src="assets/kutlink-qr.png" alt="KutLink Screenshot" width="400" />
+  <img src="assets/kutlinkqr.png" alt="KutLink Screenshot" width="400" />
 </p> 
 
 1. Enter your long URL (e.g. `https://www.google.com`).  
@@ -153,7 +153,7 @@ curl -X POST http://localhost:8080/api/shorten \
 
 # Visit a shortened URL
 open http://localhost:8080/ABc123
-
+```
 ## Contributing
 
 1. Fork the repository  
