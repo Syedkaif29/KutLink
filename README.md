@@ -1,70 +1,177 @@
-# Getting Started with Create React App
+# KutLink
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> **URL Shortener** with built‑in **QR Code** generation.
 
-## Available Scripts
+<p align="center">
+  <img src="screenshot.png" alt="KutLink Screenshot" width="400"/>
+</p>
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+- [Overview](#overview)  
+- [Features](#features)  
+- [Demo](#demo)  
+- [Tech Stack](#tech-stack)  
+- [Getting Started](#getting-started)  
+  - [Prerequisites](#prerequisites)  
+  - [Installation](#installation)  
+  - [Running Locally](#running-locally)  
+- [Usage](#usage)  
+- [API Endpoints](#api-endpoints)  
+- [Contributing](#contributing)  
+- [License](#license)  
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Overview
 
-### `npm test`
+KutLink is a simple, lightweight web application that lets users:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Shorten** any long URL.  
+2. **Copy** the shortened link to clipboard.  
+3. **Generate** and **download** a QR code for quick mobile access.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Features
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- 🔗 **Short URL** creation  
+- 📋 **One‑click copy** to clipboard  
+- 🖼️ **QR code** generation & download  
+- 🚀 Fast, responsive UI  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## Demo
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+![KutLink Screenshot](![image](https://github.com/user-attachments/assets/34a05a02-22a5-4b42-b211-94ca88d55732)
+)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Enter your long URL (e.g. `https://www.google.com`).  
+2. Click **KutLink URL**.  
+3. View and copy your short URL.  
+4. Download the QR code or scan it directly.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Tech Stack
 
-## Learn More
+- **Frontend:** React.js, Tailwind CSS  
+- **Backend:** Spring Boot (Java)  
+- **Database:** PostgreSQL 
+- **QR Code:** [ZXing](https://github.com/zxing/zxing)  
+- **Build Tools:** Maven / npm  
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Getting Started
 
-### Code Splitting
+### Prerequisites
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Java 11+  
+- Node.js & npm  
+- MongoDB or PostgreSQL instance (or Docker)  
+- Git  
 
-### Analyzing the Bundle Size
+### Installation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. **Clone the repo**  
+   ```bash
+   git clone https://github.com/your-username/kutlink.git
+   cd kutlink
+## Backend setup
 
-### Making a Progressive Web App
+```bash
+cd backend
+# Create a PostgreSQL database (e.g. kutlink_db)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+In `src/main/resources/application.properties`, configure:
 
-### Advanced Configuration
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/kutlink_db
+spring.datasource.username=YOUR_DB_USER
+spring.datasource.password=YOUR_DB_PASSWORD
+spring.jpa.hibernate.ddl-auto=update
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Build the project:
 
-### Deployment
+```bash
+mvn clean install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Frontend setup
 
-### `npm run build` fails to minify
+```bash
+cd ../frontend
+npm install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Running Locally
+
+### Start the backend
+
+```bash
+cd backend
+mvn spring-boot:run
+```
+The API will be available at `http://localhost:8080`.
+
+### Start the frontend
+
+```bash
+cd ../frontend
+npm start
+```
+The UI will run on `http://localhost:3000`.
+
+## Usage
+
+1. Open your browser and navigate to `http://localhost:3000`.  
+2. Paste your long URL into the input field.  
+3. Click **KutLink URL** to generate.  
+4. Copy the link or download the QR code.
+
+## API Endpoints
+
+The controller for URL shortening and redirection is located at `com.kutlink.kutlink.controller.UrlController`.
+
+| Method | Path            | Description                               | Request Body / Response                                                                                                                                      |
+| ------ | --------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| POST   | `/api/shorten`  | Create a new short URL & generate QR code | **Request**: JSON `{ "originalUrl": "http://..." }`<br>**Response**: `UrlShortenResponse` JSON:<br>```json
+{
+  "originalUrl": "http://www.google.com",
+  "shortUrl": "http://localhost:8080/ABc123",
+  "shortCode": "ABc123",
+  "qrCodeBase64": "data:image/png;base64,..."
+}
+``` |
+| GET    | `/{shortCode}`  | Redirect to the original URL              | _No body._ Returns a 302 redirect to the stored URL.                                                                                                         |
+
+**Example:**
+
+```bash
+# Shorten a URL
+curl -X POST http://localhost:8080/api/shorten \
+  -H "Content-Type: application/json" \
+  -d '{"originalUrl":"www.google.com"}'
+
+# Visit a shortened URL
+open http://localhost:8080/ABc123
+```
+
+## Contributing
+
+1. Fork the repository  
+2. Create a new branch (`git checkout -b feature/AwesomeFeature`)  
+3. Commit your changes (`git commit -m 'Add some feature'`)  
+4. Push to your branch (`git push origin feature/AwesomeFeature`)  
+5. Open a Pull Request  
+
+Please follow the existing code style and include tests where appropriate.
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for details.
+
