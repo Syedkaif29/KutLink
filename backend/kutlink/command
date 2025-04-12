@@ -1,0 +1,1 @@
+mvn dependency:add -DgroupId=org.springframework.boot -DartifactId=spring-boot-starter-webmvn dependency:add -DgroupId=org.springframework.boot -DartifactId=spring-boot-starter-web
