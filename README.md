@@ -44,8 +44,9 @@ KutLink is a simple, lightweight web application that lets users:
 
 ## Demo
 
-![KutLink Screenshot](assets/kutlink qr.png)
-)
+<p align="center">
+  <img src="assets/kutlink-qr.png" alt="KutLink Screenshot" width="400" />
+</p> 
 
 1. Enter your long URL (e.g. `https://www.google.com`).  
 2. Click **KutLink URL**.  
@@ -135,19 +136,12 @@ The UI will run on `http://localhost:3000`.
 
 ## API Endpoints
 
-The controller for URL shortening and redirection is located at `com.kutlink.kutlink.controller.UrlController`.
+The controller is at `com.kutlink.kutlink.controller.UrlController`.
 
-| Method | Path            | Description                               | Request Body / Response                                                                                                                                      |
-| ------ | --------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| POST   | `/api/shorten`  | Create a new short URL & generate QR code | **Request**: JSON `{ "originalUrl": "http://..." }`<br>**Response**: `UrlShortenResponse` JSON:<br>```json
-{
-  "originalUrl": "http://www.google.com",
-  "shortUrl": "http://localhost:8080/ABc123",
-  "shortCode": "ABc123",
-  "qrCodeBase64": "data:image/png;base64,..."
-}
-``` |
-| GET    | `/{shortCode}`  | Redirect to the original URL              | _No body._ Returns a 302 redirect to the stored URL.                                                                                                         |
+| Method | Path            | Description                               | Request Body                         | Response                                |
+| ------ | --------------- | ----------------------------------------- | ------------------------------------ | --------------------------------------- |
+| POST   | `/api/shorten`  | Create a new short URL & generate QR code | `{ "originalUrl": "http://..." }`    | `UrlShortenResponse` JSON:<br>```json<br>{<br>  "originalUrl":"http://www.google.com",<br>  "shortUrl":"http://localhost:8080/ABc123",<br>  "shortCode":"ABc123",<br>  "qrCodeBase64":"data:image/png;base64,..."<br>}<br>``` |
+| GET    | `/{shortCode}`  | Redirect to the original URL              | _No body_                            | 302 redirect to the stored URL          |
 
 **Example:**
 
@@ -159,7 +153,6 @@ curl -X POST http://localhost:8080/api/shorten \
 
 # Visit a shortened URL
 open http://localhost:8080/ABc123
-```
 
 ## Contributing
 
