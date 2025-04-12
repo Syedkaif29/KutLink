@@ -3,7 +3,7 @@
 > **URL Shortener** with built‑in **QR Code** generation.
 
 <p align="center">
-  <img src="screenshot.png" alt="KutLink Screenshot" width="400"/>
+  <img src="assets/title kutlink.png" alt="KutLink Screenshot" width="400"/>
 </p>
 
 ## Table of Contents
@@ -44,7 +44,7 @@ KutLink is a simple, lightweight web application that lets users:
 
 ## Demo
 
-![KutLink Screenshot](![image](https://github.com/user-attachments/assets/34a05a02-22a5-4b42-b211-94ca88d55732)
+![KutLink Screenshot](assets/kutlink qr.png)
 )
 
 1. Enter your long URL (e.g. `https://www.google.com`).  
