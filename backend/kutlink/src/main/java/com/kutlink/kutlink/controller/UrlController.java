@@ -1,87 +1,70 @@
 package com.kutlink.kutlink.controller;
 
-
 import com.kutlink.kutlink.dto.UrlShortenRequest;
 import com.kutlink.kutlink.dto.UrlShortenResponse;
 import com.kutlink.kutlink.model.UrlEntity;
 import com.kutlink.kutlink.service.QrCodeService;
 import com.kutlink.kutlink.service.UrlService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class UrlController {
 
     private final UrlService urlService;
     private final QrCodeService qrCodeService;
+    private final String baseUrl;
 
     @Autowired
-    public UrlController(UrlService urlService, QrCodeService qrCodeService) {
+    public UrlController(UrlService urlService, QrCodeService qrCodeService,
+            @Value("${app.base-url}") String baseUrl) {
         this.urlService = urlService;
         this.qrCodeService = qrCodeService;
+        this.baseUrl = baseUrl;
     }
 
-    @PostMapping("/api/shorten")
-    public ResponseEntity<UrlShortenResponse> shortenUrl(
-            @RequestBody UrlShortenRequest request,
-            HttpServletRequest servletRequest) {
-
-        // Validate URL (basic validation)
-        if (!request.getOriginalUrl().startsWith("http")) {
-            request.setOriginalUrl("http://" + request.getOriginalUrl());
+    @PostMapping("/shorten")
+    public ResponseEntity<UrlShortenResponse> shortenUrl(@RequestBody UrlShortenRequest request) {
+        // Validate the URL
+        if (request.getOriginalUrl() == null || request.getOriginalUrl().trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
         }
 
-        UrlEntity savedUrl = urlService.createShortUrl(request.getOriginalUrl());
+        // Create short URL
+        UrlEntity urlEntity = urlService.createShortUrl(request.getOriginalUrl(), baseUrl);
 
-        // Build short URL
-        String baseUrl = getBaseUrl(servletRequest);
-        String shortUrl = baseUrl + "/" + savedUrl.getShortCode();
-
-        // Generate QR code
-        String qrCodeBase64 = qrCodeService.generateQrCodeBase64(shortUrl);
-
-        UrlShortenResponse response = new UrlShortenResponse(
-                savedUrl.getOriginalUrl(),
-                shortUrl,
-                savedUrl.getShortCode(),
-                qrCodeBase64
-        );
+        // Create response
+        UrlShortenResponse response = new UrlShortenResponse();
+        response.setOriginalUrl(urlEntity.getOriginalUrl());
+        response.setShortUrl(baseUrl + "/" + urlEntity.getShortCode());
+        response.setShortCode(urlEntity.getShortCode());
+        response.setQrCode(urlEntity.getQrCode());
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{shortCode}")
-    public RedirectView redirectToOriginalUrl(
-            @PathVariable String shortCode) {
+    @GetMapping("/history")
+    public ResponseEntity<List<UrlShortenResponse>> getLinkHistory() {
+        List<UrlEntity> urlEntities = urlService.getLinkHistory();
 
-        Optional<UrlEntity> urlEntityOptional = urlService.getOriginalUrl(shortCode);
+        List<UrlShortenResponse> responses = urlEntities.stream()
+                .map(entity -> {
+                    UrlShortenResponse response = new UrlShortenResponse();
+                    response.setOriginalUrl(entity.getOriginalUrl());
+                    response.setShortUrl(baseUrl + "/" + entity.getShortCode());
+                    response.setShortCode(entity.getShortCode());
+                    response.setQrCode(entity.getQrCode());
+                    return response;
+                })
+                .collect(Collectors.toList());
 
-        if (urlEntityOptional.isPresent()) {
-            return new RedirectView(urlEntityOptional.get().getOriginalUrl());
-        } else {
-            // Redirect to home page or error page if code not found
-            return new RedirectView("/");
-        }
-    }
-
-    private String getBaseUrl(HttpServletRequest request) {
-        String scheme = request.getScheme();
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-
-        StringBuilder url = new StringBuilder();
-        url.append(scheme).append("://").append(serverName);
-
-        if (serverPort != 80 && serverPort != 443) {
-            url.append(":").append(serverPort);
-        }
-
-        return url.toString();
+        return ResponseEntity.ok(responses);
     }
 }

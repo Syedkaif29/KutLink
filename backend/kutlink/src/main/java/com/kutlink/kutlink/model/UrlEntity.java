@@ -4,49 +4,32 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "urls")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UrlEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String originalUrl;
+
+    @Column(nullable = false, unique = true)
     private String shortCode;
 
-    // Default constructor
-    public UrlEntity() {
-    }
+    @Column(columnDefinition = "TEXT", nullable = true)
+    private String qrCode;
 
-    // Constructor with parameters
-    public UrlEntity(String originalUrl, String shortCode) {
-        this.originalUrl = originalUrl;
-        this.shortCode = shortCode;
-    }
-
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getOriginalUrl() {
-        return originalUrl;
-    }
-
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
-    }
-
-    public String getShortCode() {
-        return shortCode;
-    }
-
-    public void setShortCode(String shortCode) {
-        this.shortCode = shortCode;
-    }
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 }
